@@ -1,0 +1,6 @@
+[submodule "ChameleonRT"]
+	path = ChameleonRT
+	url = https://github.com/TheVaffel/ChameleonRT.git
+[submodule "Vulkan-glTF-PBR"]
+	path = Vulkan-glTF-PBR
+	url = https://github.com/TheVaffel/Vulkan-glTF-PBR.git

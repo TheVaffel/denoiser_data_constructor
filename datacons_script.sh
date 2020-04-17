@@ -20,7 +20,7 @@ popd
 
 pushd $RELATIVE_DIR/demodulator
 
-./demodulator ../$OUTPUT_DIR/noisy%d.png ../$OUTPUT_DIR/albedo%d.exr -o ../$OUTPUT_DIR/color%d.exr --start 0
+./demodulator ../$OUTPUT_DIR/noisy%d.png ../$OUTPUT_DIR/albedo%d.exr -o ../$OUTPUT_DIR/color%d.exr --start-index 0
 
 popd
 

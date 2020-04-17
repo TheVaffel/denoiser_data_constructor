@@ -30,9 +30,13 @@ int main(int argc, const char** argv) {
   std::string in2_format;
   std::string out_format = "color%03d.exr";
   
+  int start_value = 0;
+
   for(int i = 1; i < args.size(); i++)  {
     if(args[i] == "-o") {
       out_format = args[++i];
+    } else if(args[i] == "-s" || args[i] == "--start-index") {
+      start_value = std::stoi(args[++i]);
     } else if(in1_format.length()) {
       in2_format = args[i];
     } else {
@@ -55,7 +59,7 @@ int main(int argc, const char** argv) {
     buf_in2[csize],
     buf_out[csize];
 
-  int current = 1; // Start value
+  int current = start_value; 
 
   int width = - 1, height;
   int nchans1, nchans2;

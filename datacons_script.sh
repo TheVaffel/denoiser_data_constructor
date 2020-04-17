@@ -7,20 +7,20 @@ OUTPUT_DIR=output
 PATH_FILE=path.json
 
 pushd $RELATIVE_DIR/Vulkan-glTF-PBR/build
-./bin/Vulkan-glTF-PBR -p ../../$PATH_FILE -s $SCENE -o ../../$OUTPUT_DIR/shading_normal -f normal
-./bin/Vulkan-glTF-PBR -p ../../$PATH_FILE -s $SCENE -o ../../$OUTPUT_DIR/albedo -f albedo
-./bin/Vulkan-glTF-PBR -p ../../$PATH_FILE -s $SCENE -o ../../$OUTPUT_DIR/world_position -f position
+./bin/Vulkan-glTF-PBR -p ../../$PATH_FILE -s $SCENE -o ../../$OUTPUT_DIR/shading_normal -f normal --start 0
+./bin/Vulkan-glTF-PBR -p ../../$PATH_FILE -s $SCENE -o ../../$OUTPUT_DIR/albedo -f albedo --start 0
+./bin/Vulkan-glTF-PBR -p ../../$PATH_FILE -s $SCENE -o ../../$OUTPUT_DIR/world_position -f position --start 0
 
 popd
 pushd $RELATIVE_DIR/ChameleonRT/build
 
-./chameleonrt -optix $SCENE -path ../../path.json -output ../../$OUTPUT_DIR/noisy
+./chameleonrt -optix $SCENE -path ../../path.json -output ../../$OUTPUT_DIR/noisy -start 0
 
 popd
 
 pushd $RELATIVE_DIR/demodulator
 
-./demodulator ../$OUTPUT_DIR/noisy%d.png ../$OUTPUT_DIR/albedo%d.exr -o ../$OUTPUT_DIR/color%d.exr
+./demodulator ../$OUTPUT_DIR/noisy%d.png ../$OUTPUT_DIR/albedo%d.exr -o ../$OUTPUT_DIR/color%d.exr --start 0
 
 popd
 

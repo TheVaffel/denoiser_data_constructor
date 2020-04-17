@@ -53,7 +53,7 @@ int main(int argc, const char** argv) {
 
   glm::mat4 perspective_matrix = glm::perspective(glm::radians(fov), screen_aspect, zNear, zFar);
 
-  ofs << "Camera matrix input file produced by path_write, Håkon Flatval\n";
+  ofs << "// Camera matrix input file produced by path_write, Håkon Flatval\n";
   ofs << "const float position_limit_squared = " << position_limit_squared << ";\n";
   ofs << "const float normal_limit_squared = " << normal_limit_squared << ";\n\n";
 
@@ -63,9 +63,9 @@ int main(int argc, const char** argv) {
 
   // Oof, check if this is actually right
   ofs << "// Matrices are given in row-major order\n"
-      << "const float[" << vecs.size() << "][4][4] = {\n";
+      << "const float camera_matrices[" << vecs.size() << "][4][4] = {\n";
   
-  for (int i = 0; i < vecs.size(); i++) {
+  for (uint i = 0; i < vecs.size(); i++) {
     glm::mat4 current_matrix = perspective_matrix * vecs[i];
     
     ofs << "\t{\n";
@@ -82,6 +82,17 @@ int main(int argc, const char** argv) {
     }
     ofs << "\t}";
     if (i != vecs.size() - 1) {
+      ofs << ",";
+    }
+    ofs << "\n";
+  }
+  ofs << "};\n\n";
+
+  ofs << "// Pixel offsets (I think everything is 0.5, but really not sure)\n";
+  ofs << "const float pixel_offsets[" << vecs.size() << "][2] = {\n";
+  for(uint i = 0; i < vecs.size(); i++) {
+    ofs << "\t{ 0.5f, 0.5f }";
+    if(i != vecs.size() - 1) {
       ofs << ",";
     }
     ofs << "\n";

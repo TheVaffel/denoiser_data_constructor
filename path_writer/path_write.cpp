@@ -71,10 +71,10 @@ int main(int argc, const char** argv) {
     ofs << "\t{\n";
     for (int j = 0; j < 4; j++) {
       ofs << "\t\t{ " <<
-	current_matrix[0][j] << ", " <<
-	current_matrix[1][j] << ", " <<
-	current_matrix[2][j] << ", " <<
-	current_matrix[3][j] << " }";
+	current_matrix[j][0] << ", " <<
+	current_matrix[j][1] << ", " <<
+	current_matrix[j][2] << ", " <<
+	current_matrix[j][3] << " }";
       if(j != 3) {
 	ofs << ",";
       }

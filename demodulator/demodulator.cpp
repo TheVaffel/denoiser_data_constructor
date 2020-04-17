@@ -14,7 +14,7 @@ bool isFormat(const std::string& str) {
 }
 
 void printUsage() {
-  std::cout << "./demodulator <format_noisy> <format_albedo> [-o output_format]" << std::endl;
+  std::cout << "./demodulator <format_noisy> <format_albedo> [-o <output_format>] [-s <start_index>]" << std::endl;
 }
 
 int main(int argc, const char** argv) {

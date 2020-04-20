@@ -14,13 +14,14 @@ pushd $RELATIVE_DIR/Vulkan-glTF-PBR/build
 popd
 pushd $RELATIVE_DIR/ChameleonRT/build
 
-./chameleonrt -optix $SCENE -path ../../path.json -output ../../$OUTPUT_DIR/noisy -start 0
+# ./chameleonrt -optix $SCENE -path ../../path.json -output ../../$OUTPUT_DIR/noisy -start 0
+./chameleonrt -optix $SCENE -path ../../path.json -output ../../$OUTPUT_DIR/color -start 0
 
 popd
 
 pushd $RELATIVE_DIR/demodulator
 
-./demodulator ../$OUTPUT_DIR/noisy%d.png ../$OUTPUT_DIR/albedo%d.exr -o ../$OUTPUT_DIR/color%d.exr --start-index 0
+# ./demodulator ../$OUTPUT_DIR/noisy%d.png ../$OUTPUT_DIR/albedo%d.exr -o ../$OUTPUT_DIR/color%d.exr --start-index 0
 
 popd
 

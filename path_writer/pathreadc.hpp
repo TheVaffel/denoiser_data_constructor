@@ -16,32 +16,6 @@ struct CameraCheckpoint {
     int t;
 };
 
-/* CameraCheckpoint cpFromObj(json_object* obj) {
-    CameraCheckpoint cc;
-
-    json_object* tobj;
-    
-    tobj = json_object_object_get(obj, "x");
-    cc.point.x = float(json_object_get_double(tobj));
-    tobj = json_object_object_get(obj, "y");
-    cc.point.y = float(json_object_get_double(tobj));
-    tobj = json_object_object_get(obj, "z");
-    cc.point.z = float(json_object_get_double(tobj));
-
-    tobj = json_object_object_get(obj, "dirx");
-    cc.dir.x = float(json_object_get_double(tobj));
-    tobj = json_object_object_get(obj, "diry");
-    cc.dir.y = float(json_object_get_double(tobj));
-    tobj = json_object_object_get(obj, "dirz");
-    cc.dir.z = float(json_object_get_double(tobj));
-
-    tobj = json_object_object_get(obj, "t");
-    cc.t = json_object_get_int(tobj);
-
-    return cc;
-} */
-
-
 
 CameraCheckpoint cpFromObj(json_object* obj) {
     CameraCheckpoint cc;
@@ -62,7 +36,6 @@ CameraCheckpoint cpFromObj(json_object* obj) {
     json_object_object_get_ex(obj, "dirz", &tobj);
     cc.dir.z = float(json_object_get_double(tobj));
 
-    // tobj = json_object_object_get(obj, "t");
     json_object_object_get_ex(obj, "t", &tobj);
 
     cc.t = json_object_get_int(tobj);
@@ -88,10 +61,10 @@ glm::mat4 getInterpolatedView(const CameraCheckpoint& cc1,
     CameraCheckpoint cc = getInterpolatedCheckpoint(cc1, cc2, t);
     
     glm::vec3 up(0.0f, 1.0f, 0.0f);
-    glm::vec3 x_axis = glm::normalize(glm::cross(cc.dir, up));
-    glm::vec3 y_axis = glm::normalize(glm::cross(x_axis, cc.dir));
+    glm::vec3 x_axis = - glm::normalize(glm::cross(cc.dir, up));
+    glm::vec3 y_axis = - glm::normalize(glm::cross(x_axis, cc.dir));
 
-    glm::mat3 rotation = glm::transpose(glm::mat3(x_axis, y_axis, -cc.dir));
+    glm::mat3 rotation = glm::transpose(glm::mat3(x_axis, y_axis, cc.dir));
     glm::mat4 transform = glm::mat4(rotation) * glm::translate(-cc.point);
     return transform;
 }

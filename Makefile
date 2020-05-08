@@ -24,11 +24,14 @@ path_writer:
 
 data: feature_buffers ray_trace path_header
 
-feature_buffers:
+feature_buffers: $(OUTPUT_DIR)
 	cd $(VULKAN_BUILD_DIR) && ./bin/Vulkan-glTF-PBR -p ../../$(PATH_JSON) -s $(SCENE) -o ../../$(OUTPUT_DIR)/shading_normal,../../$(OUTPUT_DIR)/albedo,../../$(OUTPUT_DIR)/world_position -f normal,albedo,position --start 0
 
-ray_trace:
+ray_trace: $(OUTPUT_DIR)
 	cd $(CHAMELEON_BUILD_DIR) && ./chameleonrt -optix $(SCENE) -path ../../$(PATH_JSON) -output ../../$(OUTPUT_DIR)/color -start 0
 
-path_header:
+path_header: $(OUTPUT_DIR)
 	cd $(PATH_WRITER_BUILD_DIR) && ./path_write ../$(PATH_JSON) -o ../$(OUTPUT_DIR)/camera_matrices.h
+
+$(OUTPUT_DIR):
+	mkdir -p $(OUTPUT_DIR)

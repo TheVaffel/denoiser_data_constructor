@@ -37,7 +37,7 @@ feature_buffers: $(OUTPUT_DIR)
 	cd $(VULKAN_BUILD_DIR) && ./bin/Vulkan-glTF-PBR -p ../../$(PATH_JSON) -s $(SCENE) -o ../../$(OUTPUT_DIR)/shading_normal,../../$(OUTPUT_DIR)/albedo,../../$(OUTPUT_DIR)/world_position -f normal,albedo,position --start 0
 
 ray_trace: $(OUTPUT_DIR)
-	cd $(CHAMELEON_BUILD_DIR) && ./chameleonrt -optix $(SCENE_OBJ) -path ../../$(PATH_JSON) -output ../../$(OUTPUT_DIR)/color -start 0
+	cd $(CHAMELEON_BUILD_DIR) && ./chameleonrt -optix $(SCENE) -path ../../$(PATH_JSON) -output ../../$(OUTPUT_DIR)/color -start 0
 
 path_header: $(OUTPUT_DIR)
 	cd $(PATH_WRITER_BUILD_DIR) && ./path_write ../$(PATH_JSON) -o ../$(OUTPUT_DIR)/camera_matrices.h

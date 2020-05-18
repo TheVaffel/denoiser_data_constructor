@@ -1,3 +1,10 @@
 output/*
 path_writer/path_write
 demodulator/demodulator
+
+**/*.png
+**/*.exr
+
+denoise_util/diffcal/diffcal
+denoise_util/exrconvert/exrconvert
+denoise_util/imcal/imcal

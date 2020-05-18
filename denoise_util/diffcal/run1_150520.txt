@@ -1,0 +1,88 @@
+Ran diff between ../exrconvert/reference_static/color0.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output0.png
+Ran diff between ../exrconvert/reference_static/color1.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output1.png
+Ran diff between ../exrconvert/reference_static/color2.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output2.png
+Ran diff between ../exrconvert/reference_static/color3.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output3.png
+Ran diff between ../exrconvert/reference_static/color4.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output4.png
+Ran diff between ../exrconvert/reference_static/color5.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output5.png
+Ran diff between ../exrconvert/reference_static/color6.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output6.png
+Ran diff between ../exrconvert/reference_static/color7.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output7.png
+Ran diff between ../exrconvert/reference_static/color8.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output8.png
+Ran diff between ../exrconvert/reference_static/color9.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output9.png
+Ran diff between ../exrconvert/reference_static/color10.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output10.png
+Ran diff between ../exrconvert/reference_static/color11.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output11.png
+Ran diff between ../exrconvert/reference_static/color12.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output12.png
+Ran diff between ../exrconvert/reference_static/color13.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output13.png
+Ran diff between ../exrconvert/reference_static/color14.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output14.png
+Ran diff between ../exrconvert/reference_static/color15.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output15.png
+Ran diff between ../exrconvert/reference_static/color16.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output16.png
+Ran diff between ../exrconvert/reference_static/color17.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output17.png
+Ran diff between ../exrconvert/reference_static/color18.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output18.png
+Ran diff between ../exrconvert/reference_static/color19.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output19.png
+Ran diff between ../exrconvert/reference_static/color20.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output20.png
+Ran diff between ../exrconvert/reference_static/color21.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output21.png
+Ran diff between ../exrconvert/reference_static/color22.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output22.png
+Ran diff between ../exrconvert/reference_static/color23.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output23.png
+Ran diff between ../exrconvert/reference_static/color24.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output24.png
+Ran diff between ../exrconvert/reference_static/color25.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output25.png
+Ran diff between ../exrconvert/reference_static/color26.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output26.png
+Ran diff between ../exrconvert/reference_static/color27.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output27.png
+Ran diff between ../exrconvert/reference_static/color28.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output28.png
+Ran diff between ../exrconvert/reference_static/color29.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output29.png
+Ran diff between ../exrconvert/reference_static/color30.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output30.png
+Ran diff between ../exrconvert/reference_static/color31.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output31.png
+Ran diff between ../exrconvert/reference_static/color32.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output32.png
+Ran diff between ../exrconvert/reference_static/color33.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output33.png
+Ran diff between ../exrconvert/reference_static/color34.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output34.png
+Ran diff between ../exrconvert/reference_static/color35.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output35.png
+Ran diff between ../exrconvert/reference_static/color36.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output36.png
+Ran diff between ../exrconvert/reference_static/color37.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output37.png
+Ran diff between ../exrconvert/reference_static/color38.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output38.png
+Ran diff between ../exrconvert/reference_static/color39.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output39.png
+Ran diff between ../exrconvert/reference_static/color40.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output40.png
+Ran diff between ../exrconvert/reference_static/color41.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output41.png
+Ran diff between ../exrconvert/reference_static/color42.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output42.png
+Ran diff between ../exrconvert/reference_static/color43.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output43.png
+Ran diff between ../exrconvert/reference_static/color44.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output44.png
+Ran diff between ../exrconvert/reference_static/color45.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output45.png
+Ran diff between ../exrconvert/reference_static/color46.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output46.png
+Ran diff between ../exrconvert/reference_static/color47.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output47.png
+Ran diff between ../exrconvert/reference_static/color48.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output48.png
+Ran diff between ../exrconvert/reference_static/color49.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output49.png
+Ran diff between ../exrconvert/reference_static/color50.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output50.png
+Ran diff between ../exrconvert/reference_static/color51.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output51.png
+Ran diff between ../exrconvert/reference_static/color52.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output52.png
+Ran diff between ../exrconvert/reference_static/color53.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output53.png
+Ran diff between ../exrconvert/reference_static/color54.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output54.png
+Ran diff between ../exrconvert/reference_static/color55.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output55.png
+Ran diff between ../exrconvert/reference_static/color56.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output56.png
+Ran diff between ../exrconvert/reference_static/color57.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output57.png
+Ran diff between ../exrconvert/reference_static/color58.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output58.png
+Ran diff between ../exrconvert/reference_static/color59.png and /home/haakon/BigProjects/bmfr/opencl/outputs_static/output59.png
+Could not find ../exrconvert/reference_static/color61.png, ending difftaking
+--------------------
+Results using RMSE
+Mean: 0.191133
+Variance: 3.01206e-08
+Standard deviation: 0.000173553
+Minimum value: 0.19104
+Maximum value: 0.192108
+--------------------
+
+--------------------
+Results using SSIM
+Mean: 0.595023
+Variance: 1.17075e-07
+Standard deviation: 0.000342162
+Minimum value: 0.593597
+Maximum value: 0.595431
+--------------------
+
+--------------------
+Results using Temporal error
+Mean: 0.000116339
+Variance: 7.27341e-14
+Standard deviation: 2.69693e-07
+Minimum value: 0.000115888
+Maximum value: 0.000116964
+--------------------
+

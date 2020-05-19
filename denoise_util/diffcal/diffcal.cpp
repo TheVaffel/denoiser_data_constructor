@@ -5,29 +5,23 @@
 #include <OpenImageIO/imageio.h>
 #include <nlohmann/json.hpp>
 
+#include "diffcal.hpp"
 #include "run_vmaf.h"
 #include "util.h"
 
 namespace OpenImageIO = OIIO;
 namespace json = nlohmann;
 
-const int NUM_METRICS = 3;
-
 const int RMSE_INDEX = 0;
 const int SSIM_INDEX = 1;
 const int TEMP_INDEX = 2;
+const int VMAF_INDEX = 3;
 
-const char* metric_names[NUM_METRICS] = {
+const char* metric_names[DIFF_NUM_METRICS] = {
   "RMSE",
   "SSIM",
   "Temporal error",
-};
-
-struct ResultState {
-  // One vector for each metric, containing score for each image
-  std::vector<std::vector<float> > results;
-
-  ResultState() : results(NUM_METRICS) { }
+  "VMAF",
 };
 
 bool is_format(const char* arg) {
@@ -109,14 +103,6 @@ void run_temporal_error(ResultState& res, float *im1, float *im2, int width, int
 }
 
 void run_diffs(ResultState& res, float* im1, float* im2, int width, int height) {
-  // Found out scale is between 0 and 1.
-  /* float mmax = -1e8, mmin = 1e8;
-  
-  for(int i = 0; i < width * height * 3; i++) {
-    mmax = std::max(im1[i], mmax);
-    mmin = std::min(im1[i], mmin);
-  }
-  std::cout << "Global max, global min: " << mmax << ", " << mmin << std::endl; */
   
   float rmse = run_rmse(im1, im2, width *  height);
   float ssim = run_ssim(im1, im2, width, height);
@@ -125,126 +111,60 @@ void run_diffs(ResultState& res, float* im1, float* im2, int width, int height) 
   res.results[SSIM_INDEX].push_back(ssim);
 }
 
-int main(int argc, const char **argv) 
-{
+ResultState computeDiff(ImageIterator& imit) {
   
-  if (argc != 3 || (!is_format(argv[1]) || !is_format(argv[2]))) {
-    std::cerr << "Must call diffcal with two arguments: ./diffcal <format1> <format2>, where each format takes an integer, e.g. image%00d.png" << std::endl;
-    exit(-1);
-  }
-
-  const int start_value = 0;
-  
-  int curr = start_value;
-
-  float *image_buffer1 = nullptr, *image_buffer2 = nullptr,
-    *last_buffer = nullptr;
+  VmafUserInfo vmaf_info;
+  run_vmaf(vmaf_info, imit.getWidth(), imit.getHeight());
 
   ResultState result_state;
 
-  VmafUserInfo vmaf_info;
-
-  int width, height;
-
   while(true) {
-    const int buff_size = 200;
-    char buff1[buff_size], buff2[buff_size];
-    int num1 = snprintf(buff1, buff_size, argv[1], curr);
-    int num2 = snprintf(buff2, buff_size, argv[2], curr);
-
-    if(num1 >= buff_size - 2 || num2 >= buff_size - 2) {
-      std::cerr << "Buffer size was " << buff_size << ", and snprint used " << num1 << " and " << num2 << " bytes respectively.. Check that buff_size is big enough" << std::endl;
-      exit(-1);
-    }
+    vmaf_update_buffers(vmaf_info, imit.getImage1(), imit.getImage2());
     
-    std::unique_ptr<OpenImageIO::ImageInput> in1 = OpenImageIO::ImageInput::open(std::string(buff1));
-    std::unique_ptr<OpenImageIO::ImageInput> in2 = OpenImageIO::ImageInput::open(std::string(buff2));
+    run_diffs(result_state, imit.getImage1(), imit.getImage2(), imit.getHeight(), imit.getWidth());
 
-    if(!in1) {
-      std::cout << "Could not find " << buff1 << ", ending difftaking" << std::endl;
+    if(imit.hasLast()) {
+      run_temporal_error(result_state, imit.getImage1(), imit.getLast(), imit.getWidth(), imit.getHeight());
+    }
+
+    vmaf_wait_until_read(vmaf_info); 
+    
+    if(!imit.forward()) {
       break;
     }
-
-    if(!in2) {
-      curr++;
-      continue;
-    }
-
-    int in1_width = in1->spec().width;
-    int in1_height = in1->spec().height;
-    int in2_width = in2->spec().width;
-    int in2_height = in2->spec().height;
-
-    // Use image buffer1 empty as indicator that this is first iteration
-    if(image_buffer1 == nullptr) {
-      width = in1_width;
-      height = in1_height;
-
-      image_buffer1 = new float[width * height * 3];
-      image_buffer2 = new float[width * height * 3];
-      last_buffer = new float[width * height * 3];
-
-      
-      // start this asynchronously 
-      run_vmaf(vmaf_info, width, height);
-
-    }
-
-    if(in1_width != width || in1_height != height) {
-      std::cerr << "Input dimensions of image 1 did not match already established dimensions!\n" <<
-	"Established dimensions: " << width << ", " << height <<
-	", dimensions of image 1: " << in1_width << ", " << in1_height << std::endl;
-      
-      delete[] image_buffer1;
-      delete[] image_buffer2;
-      delete[] last_buffer;
-      exit(-1);
-    }
-
-    if(in2_width != width || in2_height != height) {
-      std::cerr << "Input dimensions of image 2 did not match already established dimensions!\n" <<
-	"Established dimensions: " << width << ", " << height <<
-	", dimensions of image 2: " << in2_width << ", " << in2_height << std::endl;
-
-      delete[] image_buffer1;
-      delete[] image_buffer2;
-      delete[] last_buffer;
-      exit(-1);
-    }
-
-    in1->read_image(OpenImageIO::TypeDesc::FLOAT, image_buffer1);
-    in1->close();
-    in2->read_image(OpenImageIO::TypeDesc::FLOAT, image_buffer2);
-    in2->close();
-
-    vmaf_update_buffers(vmaf_info, image_buffer1, image_buffer2);    
-
-    run_diffs(result_state, image_buffer1, image_buffer2, width, height);
-
-    if(curr != start_value) {
-      run_temporal_error(result_state, image_buffer1, last_buffer, width, height);
-    }
-
-    vmaf_wait_until_read(vmaf_info);
-    std::swap(image_buffer1, last_buffer);
-    
-
-    std::cout << "Ran diff between " << buff1 << " and " << buff2 << std::endl;
-    
-    curr++;
   }
-
+  
   vmaf_signal_done(vmaf_info);
-  float vmaf_score = vmaf_get_result(vmaf_info);
 
-  if(image_buffer1 == nullptr) {
-    std::cout << "Could not find the first file pair, check if the format is correct " << std::endl;
+
+  // Read VMAF results and put them together with the rest of the scores
+  json::json obj;
+  std::ifstream ifs(VMAF_LOG_FILE);
+  if(!ifs) {
+    std::cerr << "Could not open VMAF log file " << VMAF_LOG_FILE << std::endl;
     exit(-1);
   }
+  ifs >> obj;
+  ifs.close();
 
+  json::json frame_list = obj["frames"];
+  std::cout << "Is frame_list list: " << frame_list.is_array() << std::endl;
+  
+  for(json::json& elem : frame_list) {
+    float score = elem["metrics"]["vmaf"];
+    result_state.results[VMAF_INDEX].push_back(score);
+  }
+
+  return result_state;
+}
+
+void outputResult(ResultState& result_state) {
+  
   json::json obj = json::json::object();
 
-  for(int i = 0; i < NUM_METRICS; i++) {
+  std::cout << "Number of metric results: " << result_state.results.size() << std::endl;
+  
+  for(int i = 0; i < DIFF_NUM_METRICS; i++) {
     std::vector<float>& vv = result_state.results[i];
 
     float sum = 0.0f;
@@ -287,6 +207,6 @@ int main(int argc, const char **argv)
 
   std::cout << "The above reported results are detailed in " << json_output_filename << std::endl;
 
-  std::cout << "VMAF score was " << vmaf_score << std::endl;
+  // std::cout << "VMAF score was " << vmaf_score << std::endl;
   std::cout << "Additional VMAF info can be found in " << VMAF_LOG_FILE << std::endl;
 }

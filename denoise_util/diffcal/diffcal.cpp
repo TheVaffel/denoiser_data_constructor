@@ -12,12 +12,8 @@
 namespace OpenImageIO = OIIO;
 namespace json = nlohmann;
 
-const int RMSE_INDEX = 0;
-const int SSIM_INDEX = 1;
-const int TEMP_INDEX = 2;
-const int VMAF_INDEX = 3;
 
-const char* metric_names[DIFF_NUM_METRICS] = {
+const char *diff_metric_names[DIFF_NUM_METRICS] = {
   "RMSE",
   "SSIM",
   "Temporal error",
@@ -87,7 +83,7 @@ float run_ssim(float *im1, float *im2, int width, int height) {
   return SSIM;
 }
 
-void run_temporal_error(ResultState& res, float *im1, float *im2, int width, int height) {
+void run_temporal_error(DiffResultState& res, float *im1, float *im2, int width, int height) {
 
   float lsum = 0;
   for(int i = 0; i < width * height; i++) {
@@ -99,73 +95,21 @@ void run_temporal_error(ResultState& res, float *im1, float *im2, int width, int
 
   float av = lsum / (width * height);
 
-  res.results[TEMP_INDEX].push_back(av);
+  res.results[DIFF_TEMP_INDEX].push_back(av);
 }
 
-void run_diffs(ResultState& res, float* im1, float* im2, int width, int height) {
+void run_diffs(DiffResultState& res, float* im1, float* im2, int width, int height) {
   
   float rmse = run_rmse(im1, im2, width *  height);
   float ssim = run_ssim(im1, im2, width, height);
   
-  res.results[RMSE_INDEX].push_back(rmse);
-  res.results[SSIM_INDEX].push_back(ssim);
+  res.results[DIFF_RMSE_INDEX].push_back(rmse);
+  res.results[DIFF_SSIM_INDEX].push_back(ssim);
 }
 
-ResultState computeDiff(ImageIterator& imit) {
-  
-  VmafUserInfo vmaf_info;
-  run_vmaf(vmaf_info, imit.getWidth(), imit.getHeight());
-
-  ResultState result_state;
-
-  while(true) {
-    vmaf_update_buffers(vmaf_info, imit.getImage1(), imit.getImage2());
-    
-    run_diffs(result_state, imit.getImage1(), imit.getImage2(), imit.getHeight(), imit.getWidth());
-
-    if(imit.hasLast()) {
-      run_temporal_error(result_state, imit.getImage1(), imit.getLast(), imit.getWidth(), imit.getHeight());
-    }
-
-    vmaf_wait_until_read(vmaf_info); 
-    
-    if(!imit.forward()) {
-      break;
-    }
-  }
-  
-  vmaf_signal_done(vmaf_info);
-
-
-  // Read VMAF results and put them together with the rest of the scores
-  json::json obj;
-  std::ifstream ifs(VMAF_LOG_FILE);
-  if(!ifs) {
-    std::cerr << "Could not open VMAF log file " << VMAF_LOG_FILE << std::endl;
-    exit(-1);
-  }
-  ifs >> obj;
-  ifs.close();
-
-  json::json frame_list = obj["frames"];
-  std::cout << "Is frame_list list: " << frame_list.is_array() << std::endl;
-  
-  for(json::json& elem : frame_list) {
-    float score = elem["metrics"]["vmaf"];
-    result_state.results[VMAF_INDEX].push_back(score);
-  }
-
-  return result_state;
-}
-
-void outputResult(ResultState& result_state) {
-  
-  json::json obj = json::json::object();
-
-  std::cout << "Number of metric results: " << result_state.results.size() << std::endl;
-  
+void computeStatistics(DiffResultState& state) {
   for(int i = 0; i < DIFF_NUM_METRICS; i++) {
-    std::vector<float>& vv = result_state.results[i];
+    std::vector<float>& vv = state.results[i];
 
     float sum = 0.0f;
     float mmin = 1e8, mmax = -1e8;
@@ -184,19 +128,82 @@ void outputResult(ResultState& result_state) {
     }
 
     float variance = sqsum / (vv.size() - 1);
-    float standard_deviation = sqrt(variance);
 
+    state.means[i] = mean;
+    state.mins[i] = mmin;
+    state.maxs[i] = mmax;
+    state.variances[i] = variance;
+  }
+}
+
+DiffResultState computeDiff(ImageIterator& imit) {
+  
+  VmafUserInfo vmaf_info;
+  run_vmaf(vmaf_info, imit.getWidth(), imit.getHeight());
+
+  DiffResultState result_state;
+
+  while(true) {
+    vmaf_update_buffers(vmaf_info, imit.getImage1(), imit.getImage2());
+    
+    run_diffs(result_state, imit.getImage1(), imit.getImage2(), imit.getHeight(), imit.getWidth());
+
+    if(imit.hasLast()) {
+      run_temporal_error(result_state, imit.getImage1(), imit.getLast(), imit.getWidth(), imit.getHeight());
+    }
+
+    vmaf_wait_until_read(vmaf_info); 
+    
+    if(!imit.forward()) {
+      break;
+    }
+  }
+  
+  vmaf_signal_done(vmaf_info);
+  
+  // Do this to ensure vmaf thread finishes
+  vmaf_get_result(vmaf_info);
+  
+  // Read VMAF results and put them together with the rest of the scores
+  json::json obj;
+  std::ifstream ifs(VMAF_LOG_FILE);
+  
+  if(!ifs) {
+    std::cerr << "Could not open VMAF log file " << VMAF_LOG_FILE << std::endl;
+    exit(-1);
+  }
+  ifs >> obj;
+  ifs.close();
+
+  json::json frame_list = obj["frames"];
+  
+  for(json::json& elem : frame_list) {
+    float score = elem["metrics"]["vmaf"];
+    result_state.results[DIFF_VMAF_INDEX].push_back(score);
+  }
+
+  return result_state;
+}
+
+void outputResult(DiffResultState& result_state) {
+  
+  json::json obj = json::json::object();
+
+  computeStatistics(result_state);
+  
+  for(int i = 0; i < DIFF_NUM_METRICS; i++) {
+    
     std::cout << "--------------------\n"
-	      << "Results using " << metric_names[i] << "\n"
-	      << "Mean: " << mean << "\n"
-	      << "Variance: " << variance << "\n"
-	      << "Standard deviation: " << standard_deviation << "\n"
-	      << "Minimum value: " << mmin << "\n"
-	      << "Maximum value: " << mmax << "\n"
+	      << "Results using " << diff_metric_names[i] << "\n"
+	      << "Mean: " << result_state.means[i] << "\n"
+	      << "Variance: " << result_state.variances[i] << "\n"
+	      << "Standard deviation: " << sqrt(result_state.variances[i]) << "\n"
+	      << "Minimum value: " << result_state.mins[i] << "\n"
+	      << "Maximum value: " << result_state.maxs[i] << "\n"
 	      << "--------------------\n"
 	      << std::endl;
 
-    obj[metric_names[i]] = json::json(vv);
+    obj[diff_metric_names[i]] = json::json(result_state.results[i]);
   }
 
   const std::string json_output_filename = "diff_results.json";

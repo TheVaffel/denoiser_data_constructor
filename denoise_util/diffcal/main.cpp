@@ -11,7 +11,7 @@ int main(int argc, const char **argv) {
   
   ImageFileIterator imit(start_value, argv[1], argv[2]);
 
-  ResultState result = computeDiff(imit);
+  DiffResultState result = computeDiff(imit);
 
   outputResult(result);
 }

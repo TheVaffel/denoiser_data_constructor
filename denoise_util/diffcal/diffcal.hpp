@@ -1,3 +1,6 @@
+#ifndef INCLUDE_DIFFCAL
+#define INCLUDE_DIFFCAL
+
 #include <vector>
 #include <iostream>
 
@@ -7,14 +10,28 @@ namespace OpenImageIO = OIIO;
 
 const int DIFF_NUM_METRICS = 4;
 
+const int DIFF_RMSE_INDEX = 0;
+const int DIFF_SSIM_INDEX = 1;
+const int DIFF_TEMP_INDEX = 2;
+const int DIFF_VMAF_INDEX = 3;
 
+extern const char *diff_metric_names[DIFF_NUM_METRICS];
 bool is_format(const char* arg);
 
-struct ResultState {
+struct DiffResultState {
   // One vector for each metric, containing score for each image
   std::vector<std::vector<float> > results;
 
-  ResultState() : results(DIFF_NUM_METRICS) { }
+  std::vector<float> means;
+  std::vector<float> mins;
+  std::vector<float> maxs;
+  std::vector<float> variances;
+
+  DiffResultState() : results(DIFF_NUM_METRICS),
+		      means(DIFF_NUM_METRICS),
+		      mins(DIFF_NUM_METRICS),
+		      maxs(DIFF_NUM_METRICS),
+		      variances(DIFF_NUM_METRICS) { }
 };
 
 class ImageIterator {
@@ -160,5 +177,7 @@ public:
   
 };
 
-ResultState computeDiff(ImageIterator& imit);
-void outputResult(ResultState& result_state);
+DiffResultState computeDiff(ImageIterator& imit);
+void outputResult(DiffResultState& result_state);
+
+#endif // INCLUDE_DIFFCAL

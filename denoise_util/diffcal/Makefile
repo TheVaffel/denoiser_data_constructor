@@ -1,5 +1,5 @@
-diffcal: main.cpp diffcal.cpp util.cpp run_vmaf.cpp
-	g++ -o $@ $^ -lOpenImageIO -Wall -pthread -lvmaf -g
+diffcal: main.cpp libdiffcal.a
+	g++ -o $@ $< -lOpenImageIO -Wall -pthread -g -l diffcal -L . -lvmaf
 
-diffcal.a: diffcal.cpp util.cpp run_vmaf.cpp
-	g++ -shared -o $@ $^ -Wall -g -fpic
+libdiffcal.a: diffcal.cpp util.cpp run_vmaf.cpp
+	g++ -shared -o $@ $^ -Wall -g -fpic -lvmaf

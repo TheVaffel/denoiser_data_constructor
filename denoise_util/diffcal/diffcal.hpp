@@ -120,8 +120,9 @@ public:
 
     if(!in2) {
       curr++;
-      std::cerr << "Could not find " << buff2 << ", stopping" << std::endl;
-      exit(-1);
+      std::cout << "Could not find " << buff2 << ", assuming done" << std::endl;
+      in1->close();
+      return false;
     }
 
     int in1_width = in1->spec().width;

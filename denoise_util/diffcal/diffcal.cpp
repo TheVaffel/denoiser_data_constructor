@@ -146,7 +146,7 @@ DiffResultState computeDiff(ImageIterator& imit) {
   while(true) {
     vmaf_update_buffers(vmaf_info, imit.getImage1(), imit.getImage2());
     
-    run_diffs(result_state, imit.getImage1(), imit.getImage2(), imit.getHeight(), imit.getWidth());
+    run_diffs(result_state, imit.getImage1(), imit.getImage2(), imit.getWidth(), imit.getHeight());
 
     if(imit.hasLast()) {
       run_temporal_error(result_state, imit.getImage1(), imit.getLast(), imit.getWidth(), imit.getHeight());
@@ -182,14 +182,14 @@ DiffResultState computeDiff(ImageIterator& imit) {
     result_state.results[DIFF_VMAF_INDEX].push_back(score);
   }
 
+  computeStatistics(result_state);
+    
   return result_state;
 }
 
 void outputResult(DiffResultState& result_state) {
   
   json::json obj = json::json::object();
-
-  computeStatistics(result_state);
   
   for(int i = 0; i < DIFF_NUM_METRICS; i++) {
     

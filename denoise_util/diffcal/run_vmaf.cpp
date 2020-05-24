@@ -53,13 +53,13 @@ int read_image(float *im1, float *im2, float *tmp, int stride_bytes, void *user_
   
     // Assume input to VMAF is black-white
     while(!usr->has_next) {
-      usr->vmaf_cv.wait(lk);
-
-    
+      
       if(usr->done) {
 	// Means we're done
 	return 1;
       }
+
+      usr->vmaf_cv.wait(lk);
     }
   
     for(int i = 0; i < usr->height; i++) {
@@ -67,7 +67,7 @@ int read_image(float *im1, float *im2, float *tmp, int stride_bytes, void *user_
       float *begin2 = im2 + (stride_bytes / sizeof(float)) * i;
       for(int j = 0; j < usr->width; j++) {
 	*(begin1++) = luminance3(usr->image1 + 3 * (usr->width * i + j));
-	*(begin2++) = luminance3(usr->image2 + 3 * (usr->width * i + j)); 
+	*(begin2++) = luminance3(usr->image2 + 3 * (usr->width * i + j));
       }
     }
 

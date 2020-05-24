@@ -179,6 +179,6 @@ public:
 };
 
 DiffResultState computeDiff(ImageIterator& imit);
-void outputResult(DiffResultState& result_state);
+void outputResult(DiffResultState& result_state, const std::string& filename);
 
 #endif // INCLUDE_DIFFCAL

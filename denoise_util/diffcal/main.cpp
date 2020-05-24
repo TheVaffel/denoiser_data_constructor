@@ -13,6 +13,6 @@ int main(int argc, const char **argv) {
 
   DiffResultState result = computeDiff(imit);
 
-  outputResult(result);
+  outputResult(result, "diff_results.json");
 }
 

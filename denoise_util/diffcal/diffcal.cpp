@@ -187,7 +187,8 @@ DiffResultState computeDiff(ImageIterator& imit) {
   return result_state;
 }
 
-void outputResult(DiffResultState& result_state) {
+void outputResult(DiffResultState& result_state,
+		  const std::string& output_file) {
   
   json::json obj = json::json::object();
   
@@ -206,7 +207,7 @@ void outputResult(DiffResultState& result_state) {
     obj[diff_metric_names[i]] = json::json(result_state.results[i]);
   }
 
-  const std::string json_output_filename = "diff_results.json";
+  const std::string json_output_filename = output_file;
   
   std::ofstream ofs(json_output_filename);
   ofs << std::setw(4) << obj << std::endl;

@@ -90,7 +90,7 @@ void run_temporal_error(DiffResultState& res, float *im1, float *im2, int width,
     float l1 = luminance3(im1 + 3 * i);
     float l2 = luminance3(im2 + 3 * i);
 
-    lsum += (l1 - l2) * (l1 - l2);
+    lsum += std::abs(l1 - l2);
   }
 
   float av = lsum / (width * height);

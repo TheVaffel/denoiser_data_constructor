@@ -1,11 +1,20 @@
 #include <vector>
 #include <iostream>
+#include <random>
 
 #include <OpenImageIO/imageio.h>
 
 namespace OpenImageIO = OIIO;
 
-void cal(float* im1, float* im2, float* res, int width, int height) {
+struct RNG {
+  
+  std::default_random_engine generator;
+  std::uniform_real_distribution<float> distribution;
+
+  RNG(int a, int b) : distribution(a, b) { }
+};
+
+void cal(float* im1, float* im2, float* res, int width, int height, RNG& rng) {
 
   float mmin[3] = { 1e8, 1e8, 1e8 };
   float mmax[3] = { -1e8, -1e8, -1e8 };
@@ -23,17 +32,16 @@ void cal(float* im1, float* im2, float* res, int width, int height) {
   for(int j = 0; j < 3; j++) {
     diff[j] = mmin[j] == mmax[j] ? 1.0 : mmax[j] - mmin[j];
   }
-
+  
   for(int i = 0; i < height * width; i++) {
     for(int j = 0; j < 3; j++) {
       // res[3 * i + j] = (res[3 * i + j] - mmin[j]) / diff[j];
       // res[3 * i + j] += 0.5f;
+      
+      res[3 * i + j] = rng.distribution(rng.generator);
     }
   }
-
-  for(int j = 0; j < 3; j++) {
-    std::cout << "Index " << j << ", max = " << mmax[j] << ", min = " << mmin[j] << std::endl;
-  }
+  
 }
 
 void imwrite(float *im, const std::string& name, int width, int height) {
@@ -68,7 +76,9 @@ int main(int argc, const char **argv)
     *output_buffer = nullptr;
 
   int width, height;
-
+  
+  RNG rng(0, 1);
+    
   while(true) {
     const int buff_size = 200;
     char buff1[buff_size], buff2[buff_size], buff3[buff_size];
@@ -84,7 +94,7 @@ int main(int argc, const char **argv)
     std::unique_ptr<OpenImageIO::ImageInput> in2 = OpenImageIO::ImageInput::open(std::string(buff2));
 
     if(!in1) {
-      std::cout << "Could not find " << buff1 << ", ending difftaking" << std::endl;
+      std::cout << "Could not find " << buff1 << ", ending imcal" << std::endl;
       break;
     }
 
@@ -133,7 +143,8 @@ int main(int argc, const char **argv)
     in2->read_image(OpenImageIO::TypeDesc::FLOAT, image_buffer2);
     in2->close();
 
-    cal(image_buffer1, image_buffer2, output_buffer, width, height);
+    
+    cal(image_buffer1, image_buffer2, output_buffer, width, height, rng);
 
     imwrite(output_buffer, buff3, width, height);
 

@@ -12,6 +12,7 @@ struct VmafUserInfo {
   bool has_next = false;
   bool can_reuse_buffers = true;
   bool done = false;
+  int number = 0;
 
   std::thread* thread;
 

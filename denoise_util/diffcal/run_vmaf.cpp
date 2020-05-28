@@ -4,7 +4,9 @@
 #include <iostream>
 #include <cassert>
 
+extern "C" {
 #include <libvmaf/libvmaf.h>
+}
 
 #include "util.h"
 
@@ -42,7 +44,9 @@ void vmaf_wait_until_read(VmafUserInfo& vmaf_info) {
   }
 }
 
-int read_image(float *im1, float *im2, float *tmp, int stride_bytes, void *user_data) {
+// Be aware that read_image is expected to take reference as first argument, which is
+// opposite of the convention used in the rest of this code
+int read_image(float *reference, float *test_image, float *tmp, int stride_bytes, void *user_data) {
   
   VmafUserInfo* usr =  reinterpret_cast<VmafUserInfo*>(user_data);
   assert((unsigned int)stride_bytes == usr->width * sizeof(float));
@@ -56,25 +60,34 @@ int read_image(float *im1, float *im2, float *tmp, int stride_bytes, void *user_
       
       if(usr->done) {
 	// Means we're done
-	return 1;
+	return 2;
       }
 
       usr->vmaf_cv.wait(lk);
     }
   
     for(int i = 0; i < usr->height; i++) {
-      float *begin1 = im1 + (stride_bytes / sizeof(float)) * i;
-      float *begin2 = im2 + (stride_bytes / sizeof(float)) * i;
+      // The second image corresponds to reference, the first corresponds to the query image
+      float *begin1 = test_image + (stride_bytes / sizeof(float)) * i;
+      float *begin2 = reference + (stride_bytes / sizeof(float)) * i; 
       for(int j = 0; j < usr->width; j++) {
-	*(begin1++) = luminance3(usr->image1 + 3 * (usr->width * i + j));
-	*(begin2++) = luminance3(usr->image2 + 3 * (usr->width * i + j));
+	*(begin1++) = rgb2y(usr->image1 + 3 * (usr->width * i + j));
+	*(begin2++) = rgb2y(usr->image2 + 3 * (usr->width * i + j));
       }
     }
+
+    /* 
+    imwrite(usr->image1, "test_image" + std::to_string(usr->number) + ".png", usr->width, usr->height);
+    imwrite(usr->image2, "reference" + std::to_string(usr->number) + ".png", usr->width, usr->height);*/
+    
+    imwrite(reference, "reference_grey" + std::to_string(usr->number) + ".png", usr->width, usr->height, 1);
+    imwrite(test_image, "test_grey" + std::to_string(usr->number) + ".png", usr->width, usr->height, 1);
 
     usr->has_next = false;
     usr->can_reuse_buffers = true;
   }
-  
+
+  usr->number++;
   usr->vmaf_cv.notify_all();
   
   

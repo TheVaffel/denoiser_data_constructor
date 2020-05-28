@@ -9,13 +9,16 @@ PATH_WRITER_BUILD_DIR := $(PATH_WRITER_SUBDIR)
 NANORT_BUILD_DIR := $(NANORT_SUBDIR)/build
 
 
-PATH_JSON ?= path.json
-SCENE ?= ~/data/glTF-Sample-Models-master/2.0/Sponza/glTF/Sponza.gltf
+PATH_JSON ?= sponza_path.json
+SCENE ?= /home/haakon/data/sponza/sponza1.gltf
 SCENE_OBJ := $(shell echo "$${SCENE%.*}.obj")
+# SCENE_OBJ := /home/haakon/data/sponza/sponza1.obj
 SCENE_DIR := $(shell echo "$${SCENE%/*}/")
+# SCENE_DIR := /home/haakon/data/sponza/
 
-OUTPUT_DIR ?= output
 INTERVAL ?= -1 -1
+
+OUTPUT_DIR ?= generic_output
 
 
 all: vulkan chameleon path_writer nanort

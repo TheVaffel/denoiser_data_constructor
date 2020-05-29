@@ -10,6 +10,7 @@
     "light_x": 15.0,
     "light_y": 5.0,
     "light_z": 5.0,
+    "light_intensity": 120.0,
     "light_size": 2.0
     },
     {

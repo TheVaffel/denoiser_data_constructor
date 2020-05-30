@@ -9,6 +9,7 @@
     "light_x": -3,
     "light_y": 2.4,
     "light_z": 3,
+    "light_intensity": 60,
     "light_size": 2.0,
 	"t": 0
     },

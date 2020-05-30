@@ -65,13 +65,6 @@ int main(int argc, const char ** argv) {
     in->read_image(OpenImageIO::TypeDesc::FLOAT, pixels.data());
     in->close();
 
-
-    float mmin = 1e8, mmax = -1e8;
-    for(uint i = 0; i < pixels.size(); i++) {
-      mmin = std::min(mmin, pixels[i]);
-      mmax = std::max(mmax, pixels[i]);
-    }
-
     oss = std::ostringstream();
     oss << outformat << (factor * curr_ind) << ".png";
 
@@ -90,8 +83,6 @@ int main(int argc, const char ** argv) {
     out->close();
 
     std::cout << "Successfully converted " << in_filename << " to " << out_filename << std::endl;
-
-    std::cout << "Max pixel value was " << mmax << ", min was " << mmin << std::endl;
     
     curr_ind++;
   }

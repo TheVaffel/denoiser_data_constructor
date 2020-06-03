@@ -53,6 +53,9 @@ int main(int argc, const char** argv) {
 
   glm::mat4 perspective_matrix = glm::perspective(glm::radians(fov), screen_aspect, zNear, zFar);
 
+  glm::mat4 pinv = glm::inverse(perspective_matrix);
+  
+
   ofs << "// Camera matrix input file produced by path_write, Håkon Flatval\n";
   ofs << "const float position_limit_squared = " << position_limit_squared << ";\n";
   ofs << "const float normal_limit_squared = " << normal_limit_squared << ";\n\n";
@@ -61,10 +64,22 @@ int main(int argc, const char** argv) {
 
   std::cout << "Outputting " << vecs.size() << " matrices" << std::endl;
 
-  // Oof, check if this is actually right
-  ofs << "// Matrices are given in row-major order\n"
-      << "const float camera_matrices[" << vecs.size() << "][4][4] = {\n";
+  ofs << "// Matrices are given in col-major order\n\n"
+      << "const float inverse_perspective_matrix[4][4] = {\n";
+  for(int i = 0; i < 4; i++) {
+      ofs << "\t{ "
+	  << pinv[i][0] << ", "
+	  << pinv[i][1] << ", "
+	  << pinv[i][2] << ", "
+	  << pinv[i][3] << " }";
+      if(i != 3) {
+	  ofs << ", ";
+      }
+      ofs << "\n";
+  }
+  ofs << "};\n\n";
   
+  ofs << "const float camera_matrices[" << vecs.size() << "][4][4] = {\n";	  
   for (uint i = 0; i < vecs.size(); i++) {
     glm::mat4 current_matrix = perspective_matrix * vecs[i];
     

@@ -3,8 +3,6 @@
 #include <vector>
 #include <sstream>
 
-namespace OpenImageIO = OIIO;
-
 void print_usage() {
   std::cout << "Usage: \n"
 	    << "./exrconvert -i <input_prefix> -o <output_prefix> "
@@ -50,35 +48,35 @@ int main(int argc, const char ** argv) {
     oss << informat << curr_ind << ".exr";
     std::string in_filename = oss.str();
       
-    std::unique_ptr<OpenImageIO::ImageInput> in = OpenImageIO::ImageInput::open(in_filename);
+    std::unique_ptr<OIIO::ImageInput> in = OIIO::ImageInput::open(in_filename);
 
     if(!in) {
       std::cout << "Could not find input file " << in_filename
 		<< ", considering job done" << std::endl;
       break;
     }
-    const OpenImageIO::ImageSpec &spec = in->spec();
+    const OIIO::ImageSpec &spec = in->spec();
     int xres = spec.width;
     int yres = spec.height;
     int channels = spec.nchannels;
     std::vector<float> pixels(xres * yres * channels);
-    in->read_image(OpenImageIO::TypeDesc::FLOAT, pixels.data());
+    in->read_image(OIIO::TypeDesc::FLOAT, pixels.data());
     in->close();
 
     oss = std::ostringstream();
     oss << outformat << (factor * curr_ind) << ".png";
 
     std::string out_filename = oss.str();
-    std::unique_ptr<OpenImageIO::ImageOutput> out = OpenImageIO::ImageOutput::create(out_filename);
+    std::unique_ptr<OIIO::ImageOutput> out = OIIO::ImageOutput::create(out_filename);
     if(!out) {
       std::cerr << "Cannot make output file " << out_filename << ", exiting" << std::endl;
       exit(-1);
     }
 
-    const OpenImageIO::ImageSpec spec2(xres, yres, channels,
-				       OpenImageIO::TypeDesc::UINT8);
+    const OIIO::ImageSpec spec2(xres, yres, channels,
+				       OIIO::TypeDesc::UINT8);
     out->open(out_filename, spec2);
-    out->write_image(OpenImageIO::TypeDesc::FLOAT,
+    out->write_image(OIIO::TypeDesc::FLOAT,
 		     pixels.data());
     out->close();
 

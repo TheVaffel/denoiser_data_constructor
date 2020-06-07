@@ -6,8 +6,6 @@
 
 #include <OpenImageIO/imageio.h>
 
-namespace OpenImageIO = OIIO;
-
 const int DIFF_NUM_METRICS = 4;
 
 const int DIFF_RMSE_INDEX = 0;
@@ -110,8 +108,8 @@ public:
       exit(-1);
     }
     
-    std::unique_ptr<OpenImageIO::ImageInput> in1 = OpenImageIO::ImageInput::open(std::string(buff1));
-    std::unique_ptr<OpenImageIO::ImageInput> in2 = OpenImageIO::ImageInput::open(std::string(buff2));
+    std::unique_ptr<OIIO::ImageInput> in1 = OIIO::ImageInput::open(std::string(buff1));
+    std::unique_ptr<OIIO::ImageInput> in2 = OIIO::ImageInput::open(std::string(buff2));
 
     if(!in1) {
       std::cout << "Could not find " << buff1 << ", iterator is done" << std::endl;
@@ -166,9 +164,9 @@ public:
       exit(-1);
     }
 
-    in1->read_image(OpenImageIO::TypeDesc::FLOAT, image1);
+    in1->read_image(OIIO::TypeDesc::FLOAT, image1);
     in1->close();
-    in2->read_image(OpenImageIO::TypeDesc::FLOAT, image2);
+    in2->read_image(OIIO::TypeDesc::FLOAT, image2);
     in2->close();
     
     std::cout << "Successfully iterated to images " << buff1 << " and " << buff2 << std::endl;

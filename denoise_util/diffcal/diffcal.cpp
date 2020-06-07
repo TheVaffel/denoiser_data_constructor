@@ -9,7 +9,6 @@
 #include "run_vmaf.h"
 #include "util.h"
 
-namespace OpenImageIO = OIIO;
 namespace json = nlohmann;
 
 

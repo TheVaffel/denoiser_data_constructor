@@ -21,7 +21,7 @@ INTERVAL ?= -1 -1
 OUTPUT_DIR ?= generic_output
 
 
-all: vulkan chameleon path_writer nanort
+all: vulkan chameleon path_writer
 
 vulkan:
 	$(MAKE) -C $(VULKAN_BUILD_DIR)
@@ -29,8 +29,8 @@ vulkan:
 chameleon:
 	$(MAKE) -C $(CHAMELEON_BUILD_DIR)
 
-nanort:
-	$(MAKE) -C $(NANORT_BUILD_DIR)
+# nanort:
+# 	$(MAKE) -C $(NANORT_BUILD_DIR)
 
 path_writer:
 	$(MAKE) -C $(PATH_WRITER_BUILD_DIR)
@@ -46,8 +46,8 @@ ray_trace: $(OUTPUT_DIR)
 path_header: $(OUTPUT_DIR)
 	cd $(PATH_WRITER_BUILD_DIR) && ./path_write ../$(PATH_JSON) -o ../$(OUTPUT_DIR)/camera_matrices.h
 
-nano_trace: $(OUTPUT_DIR)
-	cd $(NANORT_BUILD_DIR) && ./bin/path_tracer -p ../../dataconstruction/$(PATH_JSON) -o ../../dataconstruction/$(OUTPUT_DIR)/color $(SCENE_OBJ) 1.0 $(SCENE_DIR)
+# nano_trace: $(OUTPUT_DIR)
+# 	cd $(NANORT_BUILD_DIR) && ./bin/path_tracer -p ../../dataconstruction/$(PATH_JSON) -o ../../dataconstruction/$(OUTPUT_DIR)/color $(SCENE_OBJ) 1.0 $(SCENE_DIR)
 
 $(OUTPUT_DIR):
 	mkdir -p $(OUTPUT_DIR)

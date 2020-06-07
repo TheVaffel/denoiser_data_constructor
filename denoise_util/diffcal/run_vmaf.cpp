@@ -78,10 +78,10 @@ int read_image(float *reference, float *test_image, float *tmp, int stride_bytes
 
     /* 
     imwrite(usr->image1, "test_image" + std::to_string(usr->number) + ".png", usr->width, usr->height);
-    imwrite(usr->image2, "reference" + std::to_string(usr->number) + ".png", usr->width, usr->height);*/
+    imwrite(usr->image2, "reference" + std::to_string(usr->number) + ".png", usr->width, usr->height);
     
     imwrite(reference, "reference_grey" + std::to_string(usr->number) + ".png", usr->width, usr->height, 1);
-    imwrite(test_image, "test_grey" + std::to_string(usr->number) + ".png", usr->width, usr->height, 1);
+    imwrite(test_image, "test_grey" + std::to_string(usr->number) + ".png", usr->width, usr->height, 1); */
 
     usr->has_next = false;
     usr->can_reuse_buffers = true;

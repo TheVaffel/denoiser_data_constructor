@@ -187,21 +187,23 @@ DiffResultState computeDiff(ImageIterator& imit) {
 }
 
 void outputResult(DiffResultState& result_state,
-		  const std::string& output_file) {
+		  const std::string& output_file,
+		  bool write_to_stdout) {
   
   json::json obj = json::json::object();
   
   for(int i = 0; i < DIFF_NUM_METRICS; i++) {
-    
-    std::cout << "--------------------\n"
-	      << "Results using " << diff_metric_names[i] << "\n"
-	      << "Mean: " << result_state.means[i] << "\n"
-	      << "Variance: " << result_state.variances[i] << "\n"
-	      << "Standard deviation: " << sqrt(result_state.variances[i]) << "\n"
-	      << "Minimum value: " << result_state.mins[i] << "\n"
-	      << "Maximum value: " << result_state.maxs[i] << "\n"
-	      << "--------------------\n"
-	      << std::endl;
+      if(write_to_stdout) {
+	  std::cout << "--------------------\n"
+		    << "Results using " << diff_metric_names[i] << "\n"
+		    << "Mean: " << result_state.means[i] << "\n"
+		    << "Variance: " << result_state.variances[i] << "\n"
+		    << "Standard deviation: " << sqrt(result_state.variances[i]) << "\n"
+		    << "Minimum value: " << result_state.mins[i] << "\n"
+		    << "Maximum value: " << result_state.maxs[i] << "\n"
+		    << "--------------------\n"
+		    << std::endl;
+      }
 
     obj[diff_metric_names[i]] = json::json(result_state.results[i]);
   }
@@ -212,8 +214,10 @@ void outputResult(DiffResultState& result_state,
   ofs << std::setw(4) << obj << std::endl;
   ofs.close();
 
-  std::cout << "The above reported results are detailed in " << json_output_filename << std::endl;
+  if(write_to_stdout) {
+      std::cout << "The above reported results are detailed in " << json_output_filename << std::endl;
 
-  // std::cout << "VMAF score was " << vmaf_score << std::endl;
-  std::cout << "Additional VMAF info can be found in " << VMAF_LOG_FILE << std::endl;
+      // std::cout << "VMAF score was " << vmaf_score << std::endl;
+      std::cout << "Additional VMAF info can be found in " << VMAF_LOG_FILE << std::endl;
+  }
 }

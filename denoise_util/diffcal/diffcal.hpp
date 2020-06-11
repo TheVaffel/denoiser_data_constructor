@@ -176,7 +176,7 @@ public:
   
 };
 
-DiffResultState computeDiff(ImageIterator& imit);
+DiffResultState computeDiff(ImageIterator& imit, bool with_ssim=true);
 void outputResult(DiffResultState& result_state, const std::string& filename,
 		  bool write_to_stdout = true);
 

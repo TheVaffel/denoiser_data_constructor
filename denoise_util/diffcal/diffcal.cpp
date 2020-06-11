@@ -83,11 +83,9 @@ float run_ssim(float *im1, float *im2, int width, int height) {
 
 	    float mean1 = sum1;
 	    float mean2 = sum2;
-
 	    float stdsum1 = 0, stdsum2 = 0;
 	    float covsum = 0;
   
-	    // for(int i = 0; i < width * height; i++) {
 	    for(int i = 0; i < s; i++) {
 		for(int j = 0; j < s; j++) {
 		    int pix = (offy + i) * width + offx + j;
@@ -101,11 +99,8 @@ float run_ssim(float *im1, float *im2, int width, int height) {
 		}
 	    }
 
-	    // float std1 = sqrt(stdsum1 / (width * height - 1));
-	    // float std2 = sqrt(stdsum2 / (width * height - 1));
-	    // float cov = covsum / (width * height - 1);
-	    float std1 = stdsum1;
-	    float std2 = stdsum2;
+	    float std1 = sqrt(stdsum1);
+	    float std2 = sqrt(stdsum2);
 	    float cov = covsum;
 
 	    float K1 = 0.01f;
@@ -122,7 +117,6 @@ float run_ssim(float *im1, float *im2, int width, int height) {
     }
   
     float SSIM = std::accumulate(window_scores.begin(), window_scores.end(), 0.0f) / window_scores.size();
-    
     
     return SSIM;
 }

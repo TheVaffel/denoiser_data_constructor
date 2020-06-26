@@ -1,0 +1,35 @@
+--------------------
+Results using RMSE
+Mean: 0.0451842
+Variance: 0.00035098
+Standard deviation: 0.0187345
+Minimum value: 0.0169239
+Maximum value: 0.0650922
+--------------------
+
+--------------------
+Results using SSIM
+Mean: 0.840913
+Variance: 0.00250672
+Standard deviation: 0.0500671
+Minimum value: 0.776519
+Maximum value: 0.924156
+--------------------
+
+--------------------
+Results using Temporal error
+Mean: 0.0791366
+Variance: 0.00237224
+Standard deviation: 0.0487057
+Minimum value: 0.0129711
+Maximum value: 0.160882
+--------------------
+
+--------------------
+Results using VMAF
+Mean: 54.4868
+Variance: 53.1026
+Standard deviation: 7.28715
+Minimum value: 37.766
+Maximum value: 66.8883
+--------------------

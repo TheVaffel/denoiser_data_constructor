@@ -33,15 +33,22 @@ void cal(float* im1, float* im2, float* res, int width, int height, RNG& rng) {
     diff[j] = mmin[j] == mmax[j] ? 1.0 : mmax[j] - mmin[j];
   }
   
-  for(int i = 0; i < height * width; i++) {
+  /* for(int i = 0; i < height * width; i++) {
     for(int j = 0; j < 3; j++) {
       // res[3 * i + j] = (res[3 * i + j] - mmin[j]) / diff[j];
       // res[3 * i + j] += 0.5f;
       
       res[3 * i + j] = rng.distribution(rng.generator);
     }
-  }
+    } */
   
+}
+
+void modulate(float* im1, float* im2, float* res, int width, int height) {
+    for(int i = 0; i < width * height * 3; i++) {
+	res[i] = im1[i] * im2[i];
+	res[i] = pow(res[i], 1.0 / 2.2);
+    }
 }
 
 void imwrite(float *im, const std::string& name, int width, int height) {
@@ -144,7 +151,8 @@ int main(int argc, const char **argv)
     in2->close();
 
     
-    cal(image_buffer1, image_buffer2, output_buffer, width, height, rng);
+    // cal(image_buffer1, image_buffer2, output_buffer, width, height, rng);
+    modulate(image_buffer1, image_buffer2, output_buffer, width, height);
 
     imwrite(output_buffer, buff3, width, height);
 
